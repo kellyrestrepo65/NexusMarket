@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Devoluciones')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container" th:with="role=${currentUser.role()}">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card narrow" th:if="${role == 'BUYER'}">
+        <h2>Solicitar devolucion</h2>
+        <form th:action="@{/returns}" method="post" class="form">
+            <label>Id de la orden entregada <input name="orderId" required></label>
+            <label>Motivo <input name="reason" required></label>
+            <button type="submit">Solicitar</button>
+        </form>
+    </section>
+    <section class="card">
+        <h2>Devoluciones</h2>
+        <p class="muted" th:if="${#lists.isEmpty(returns)}">No hay devoluciones.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(returns)}">
+            <table>
+                <tr><th>Id</th><th>Orden</th><th>Motivo</th><th>Estado</th><th>Reembolso</th><th>Acciones</th></tr>
+                <tr th:each="r : ${returns}">
+                    <td th:text="${r.id()}"></td>
+                    <td th:text="${r.orderId()}"></td>
+                    <td th:text="${r.reason()}"></td>
+                    <td><span class="badge" th:text="${labels.getOrDefault(r.status(), r.status())}"></span></td>
+                    <td th:text="${r.refund() == null} ? '-' : ${#numbers.formatDecimal(r.refund().amount(), 1, 'POINT', 2, 'COMMA')} + ' (' + ${labels.getOrDefault(r.refund().status(), r.refund().status())} + ')'"></td>
+                    <td><div class="actions" th:if="${role == 'ADMINISTRATOR'}">
+                        <th:block th:if="${r.status() == 'REQUESTED'}">
+                            <form th:action="@{/returns/{id}/approval(id=${r.id()})}" method="post" class="inline-action">
+                                <button type="submit" class="small">Aprobar</button>
+                            </form>
+                            <form th:action="@{/returns/{id}/rejection(id=${r.id()})}" method="post" class="inline-action">
+                                <button type="submit" class="small ghost">Rechazar</button>
+                            </form>
+                        </th:block>
+                        <th:block th:if="${r.refund() != null and r.refund().status() == 'PENDING'}">
+                            <form th:action="@{/returns/{id}/refund/processing(id=${r.id()})}" method="post" class="inline-action">
+                                <button type="submit" class="small">Procesar reembolso</button>
+                            </form>
+                            <form th:action="@{/returns/{id}/refund/rejection(id=${r.id()})}" method="post" class="inline-action">
+                                <button type="submit" class="small ghost">Rechazar reembolso</button>
+                            </form>
+                        </th:block>
+                    </div></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

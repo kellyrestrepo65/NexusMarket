@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!-- Fragmentos comunes: cabecera, barra superior, menu por rol y mensajes flash -->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' | NexusMarket'">NexusMarket</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+
+<header th:fragment="topbar" class="topbar">
+    <div class="brand">NexusMarket</div>
+    <div class="session" th:if="${currentUser != null}">
+        <span th:text="${currentUser.fullName()}">Usuario</span>
+        <span class="badge" th:text="${labels.getOrDefault(currentUser.role(), currentUser.role())}">Rol</span>
+        <span class="muted" th:text="'id ' + ${currentUser.id()}">id</span>
+        <form th:action="@{/logout}" method="post" class="inline-action">
+            <button type="submit" class="ghost small">Salir</button>
+        </form>
+    </div>
+</header>
+
+<nav th:fragment="nav" class="tabs" th:if="${currentUser != null}">
+    <a th:each="item : ${menu}" th:href="@{${item.path()}}" th:text="${item.title()}"
+       th:classappend="${currentPath == item.path()} ? 'active'">Opcion</a>
+</nav>
+
+<div th:fragment="alerts">
+    <div class="alert ok" th:if="${success}" th:text="${success}">ok</div>
+    <div class="alert error" th:if="${error}" th:text="${error}">error</div>
+</div>
+
+</body>
+</html>

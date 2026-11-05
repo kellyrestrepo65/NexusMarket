@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!-- Autonoma: los @ModelAttribute del advice no llegan a las vistas de @ExceptionHandler -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Error | NexusMarket</title>
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+<header class="topbar"><div class="brand">NexusMarket</div></header>
+<main class="container">
+    <section class="card narrow">
+        <h2>No se pudo completar la operacion</h2>
+        <div class="alert error" th:text="${message}">Error</div>
+        <a th:href="@{/}">Volver al inicio</a>
+    </section>
+</main>
+</body>
+</html>

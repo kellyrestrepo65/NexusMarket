@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Ordenes')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card" th:with="role=${currentUser.role()}">
+        <h2>Ordenes</h2>
+        <p class="muted" th:if="${#lists.isEmpty(orders)}">No hay ordenes.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(orders)}">
+            <table>
+                <tr><th>Id</th><th>Comprador</th><th>Estado</th><th>Items</th><th>Total</th><th>Acciones</th></tr>
+                <tr th:each="o : ${orders}">
+                    <td th:text="${o.id()}"></td>
+                    <td th:text="${o.buyerId()}"></td>
+                    <td><span class="badge" th:text="${labels.getOrDefault(o.status(), o.status())}"></span></td>
+                    <td><div th:each="i : ${o.items()}" th:text="${i.quantity()} + ' x ' + ${i.productId()}"></div></td>
+                    <td th:text="${#numbers.formatDecimal(o.total(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td><div class="actions">
+                        <form th:if="${role == 'BUYER' and o.status() == 'PENDING_PAYMENT'}"
+                              th:action="@{/orders/{id}/payment(id=${o.id()})}" method="post" class="inline-action">
+                            <button type="submit" class="small">Pagar</button>
+                        </form>
+                        <form th:if="${role == 'LOGISTICS_OPERATOR' and o.status() == 'PAID'}"
+                              th:action="@{/orders/{id}/dispatch(id=${o.id()})}" method="post" class="inline-action">
+                            <button type="submit" class="small">Despachar</button>
+                        </form>
+                        <form th:if="${role == 'LOGISTICS_OPERATOR' and o.status() == 'DISPATCHED'}"
+                              th:action="@{/orders/{id}/delivery(id=${o.id()})}" method="post" class="inline-action">
+                            <button type="submit" class="small">Confirmar entrega</button>
+                        </form>
+                    </div></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

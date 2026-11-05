@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Inventario')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card">
+        <h2>Inventario por producto</h2>
+        <form th:action="@{/inventory}" method="get" class="form inline">
+            <select name="productId">
+                <option value="">Selecciona un producto</option>
+                <option th:each="p : ${products}" th:value="${p.id()}" th:selected="${p.id() == productId}"
+                        th:text="${p.name()} + ' (' + ${p.id()} + ')'"></option>
+            </select>
+            <button type="submit">Consultar</button>
+        </form>
+    </section>
+    <section class="card narrow" th:if="${canOperate and productId != null and productId != ''}">
+        <h2>Recibir mercancia</h2>
+        <form th:action="@{/inventory/receipts}" method="post" class="form">
+            <input type="hidden" name="productId" th:value="${productId}">
+            <label>Bodega
+                <select name="warehouseId">
+                    <option th:each="w : ${warehouses}" th:value="${w.id()}" th:text="${w.name()}"></option>
+                </select>
+            </label>
+            <label>Cantidad <input name="quantity" type="number" min="1" required></label>
+            <button type="submit">Recibir</button>
+        </form>
+    </section>
+    <section class="card" th:if="${productId != null and productId != ''}">
+        <h2>Existencias</h2>
+        <p class="muted" th:if="${#lists.isEmpty(inventories)}">Sin existencias para este producto.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(inventories)}">
+            <table>
+                <tr><th>Id</th><th>Bodega</th><th>Disponible</th><th>Reservado</th><th>Danado</th><th>Libre</th>
+                    <th th:if="${canOperate}">Acciones</th></tr>
+                <tr th:each="i : ${inventories}">
+                    <td th:text="${i.id()}"></td>
+                    <td th:text="${i.warehouseId()}"></td>
+                    <td th:text="${i.available()}"></td>
+                    <td th:text="${i.reserved()}"></td>
+                    <td th:text="${i.damaged()}"></td>
+                    <td th:text="${i.free()}"></td>
+                    <td th:if="${canOperate}"><div class="actions">
+                        <form th:action="@{/inventory/{id}/adjustments(id=${i.id()})}" method="post" class="inline-action">
+                            <input type="hidden" name="productId" th:value="${productId}">
+                            <input name="delta" type="number" required placeholder="+/-">
+                            <button type="submit" class="small ghost">Ajustar</button>
+                        </form>
+                        <form th:action="@{/inventory/{id}/damaged(id=${i.id()})}" method="post" class="inline-action">
+                            <input type="hidden" name="productId" th:value="${productId}">
+                            <input name="quantity" type="number" min="1" required>
+                            <button type="submit" class="small ghost">Marcar danado</button>
+                        </form>
+                    </div></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

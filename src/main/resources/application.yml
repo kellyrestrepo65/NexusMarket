@@ -1,3 +1,32 @@
+# la sesion web viaja solo por cookie (sin ;jsessionid en las URL)
+server:
+  servlet:
+    session:
+      tracking-modes: cookie
+
 spring:
   application:
     name: nexusmarket
+  datasource:
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/nexusmarket?createDatabaseIfNotExist=true}
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  data:
+    mongodb:
+      uri: ${MONGO_URI:mongodb://localhost:27017/nexusmarket}
+
+nexusmarket:
+  seed:
+    admin:
+      document: ${SEED_ADMIN_DOCUMENT:1000000001}
+      email: ${SEED_ADMIN_EMAIL:admin@nexusmarket.com}
+    logistics:
+      document: ${SEED_LOGISTICS_DOCUMENT:1000000002}
+      email: ${SEED_LOGISTICS_EMAIL:logistica@nexusmarket.com}
+    supervisor:
+      document: ${SEED_SUPERVISOR_DOCUMENT:1000000003}
+      email: ${SEED_SUPERVISOR_EMAIL:supervisor@nexusmarket.com}

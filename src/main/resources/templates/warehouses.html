@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Bodegas')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container" th:with="role=${currentUser.role()}">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card narrow" th:if="${role == 'ADMINISTRATOR' or role == 'SELLER'}">
+        <h2>Crear bodega</h2>
+        <form th:action="@{/warehouses}" method="post" class="form">
+            <label>Nombre <input name="name" required></label>
+            <label>Tipo
+                <select name="type">
+                    <option th:each="t : ${types}" th:value="${t}" th:text="${labels.getOrDefault(t.name(), t.name())}"></option>
+                </select>
+            </label>
+            <label th:if="${role == 'ADMINISTRATOR'}">Id del vendedor (solo bodega de vendedor)
+                <input name="sellerId"></label>
+            <input th:if="${role == 'SELLER'}" type="hidden" name="sellerId" th:value="${currentUser.id()}">
+            <button type="submit">Crear</button>
+        </form>
+    </section>
+    <section class="card">
+        <h2>Bodegas</h2>
+        <p class="muted" th:if="${#lists.isEmpty(warehouses)}">No hay bodegas.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(warehouses)}">
+            <table>
+                <tr><th>Id</th><th>Nombre</th><th>Tipo</th><th>Propietario</th></tr>
+                <tr th:each="w : ${warehouses}">
+                    <td th:text="${w.id()}"></td>
+                    <td th:text="${w.name()}"></td>
+                    <td th:text="${labels.getOrDefault(w.type(), w.type())}"></td>
+                    <td th:text="${w.ownerId() ?: 'Marketplace'}"></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Ingresar')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card narrow">
+        <h2>Ingresar</h2>
+        <p class="muted">Ingresa con tu id de usuario. Internos de prueba: 100000 administrador,
+            100001 operador logistico, 100002 supervisor.</p>
+        <form th:action="@{/login}" method="post" class="form">
+            <label>Id de usuario <input name="userId" required></label>
+            <button type="submit">Ingresar</button>
+        </form>
+    </section>
+    <section class="card narrow">
+        <h2>Registrarme como comprador</h2>
+        <form th:action="@{/register}" method="post" class="form">
+            <label>Documento <input name="identityDocument" required></label>
+            <label>Nombre completo <input name="fullName" required></label>
+            <label>Correo <input name="email" type="email" required></label>
+            <label>Direccion <input name="addressLine1" required></label>
+            <div class="row">
+                <label>Ciudad <input name="city" required></label>
+                <label>Departamento <input name="stateOrProvince"></label>
+            </div>
+            <div class="row">
+                <label>Pais <input name="country" required></label>
+                <label>Codigo postal <input name="postalCode"></label>
+            </div>
+            <button type="submit">Registrarme</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

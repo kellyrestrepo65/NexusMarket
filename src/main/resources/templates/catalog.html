@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Catalogo')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <h2>Catalogo publicado</h2>
+    <p class="muted" th:if="${#lists.isEmpty(products)}">No hay productos publicados.</p>
+    <div class="grid">
+        <section class="card" th:each="p : ${products}">
+            <h3 th:text="${p.name()}">Producto</h3>
+            <p><b th:text="'$ ' + ${#numbers.formatDecimal(p.price(), 1, 'POINT', 2, 'COMMA')}"></b>
+                <span class="badge" th:text="${labels.getOrDefault(p.type(), p.type())}"></span></p>
+            <p class="muted">
+                <span th:each="v : ${p.variants()}" th:text="${v.attribute()} + ': ' + ${v.value()} + ' '"></span>
+            </p>
+            <form th:action="@{/cart/items}" method="post" class="form inline">
+                <input type="hidden" name="productId" th:value="${p.id()}">
+                <input type="number" name="quantity" value="1" min="1">
+                <button type="submit" class="small">Agregar</button>
+            </form>
+        </section>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Envios')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card">
+        <h2>Envios</h2>
+        <p class="muted" th:if="${#lists.isEmpty(shipments)}">No hay envios.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(shipments)}">
+            <table>
+                <tr><th>Id</th><th>Orden</th><th>Operador logistico</th><th>Estado</th></tr>
+                <tr th:each="s : ${shipments}">
+                    <td th:text="${s.id()}"></td>
+                    <td th:text="${s.orderId()}"></td>
+                    <td th:text="${s.logisticsOperatorId() ?: '-'}"></td>
+                    <td><span class="badge" th:text="${labels.getOrDefault(s.status(), s.status())}"></span></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

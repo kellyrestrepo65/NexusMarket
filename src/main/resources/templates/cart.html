@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Carrito')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card">
+        <h2>Mi carrito</h2>
+        <p class="muted" th:if="${#lists.isEmpty(lines)}">El carrito esta vacio.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(lines)}">
+            <table>
+                <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th></th></tr>
+                <tr th:each="l : ${lines}">
+                    <td th:text="${l.name()}"></td>
+                    <td th:text="${l.unitPrice() == null} ? '-' : ${#numbers.formatDecimal(l.unitPrice(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td>
+                        <form th:action="@{/cart/items/{id}/quantity(id=${l.productId()})}" method="post" class="inline-action">
+                            <input type="number" name="quantity" min="1" th:value="${l.quantity()}">
+                            <button type="submit" class="small ghost">Cambiar</button>
+                        </form>
+                    </td>
+                    <td th:text="${l.subtotal() == null} ? '-' : ${#numbers.formatDecimal(l.subtotal(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td>
+                        <form th:action="@{/cart/items/{id}/removal(id=${l.productId()})}" method="post" class="inline-action">
+                            <button type="submit" class="small ghost">Quitar</button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+            <p><b th:text="'Total estimado: $ ' + ${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')}"></b></p>
+            <div class="actions">
+                <form th:action="@{/cart/checkout}" method="post" class="inline-action">
+                    <button type="submit">Confirmar compra</button>
+                </form>
+                <form th:action="@{/cart/clearing}" method="post" class="inline-action">
+                    <button type="submit" class="ghost">Vaciar carrito</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

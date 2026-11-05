@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Mi perfil')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card" th:with="u=${currentUser}">
+        <h2>Mi perfil</h2>
+        <div class="stat">
+            <div><span>Id</span><b th:text="${u.id()}"></b></div>
+            <div><span>Documento</span><b th:text="${u.identityDocument()}"></b></div>
+            <div><span>Nombre</span><b th:text="${u.fullName()}"></b></div>
+            <div><span>Correo</span><b th:text="${u.email()}"></b></div>
+            <div><span>Rol</span><b th:text="${labels.getOrDefault(u.role(), u.role())}"></b></div>
+            <div><span>Estado</span><b th:text="${labels.getOrDefault(u.status(), u.status())}"></b></div>
+            <div th:if="${u.commercialStatus() != null}"><span>Estado comercial</span>
+                <b th:text="${labels.getOrDefault(u.commercialStatus(), u.commercialStatus())}"></b></div>
+            <div th:if="${u.mainAddress() != null}"><span>Direccion</span>
+                <b th:text="${u.mainAddress().getAddressLine1() + ', ' + u.mainAddress().getCity() + ', ' + u.mainAddress().getCountry()}"></b></div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

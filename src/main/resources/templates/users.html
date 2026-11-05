@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Usuarios')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container" th:with="role=${currentUser.role()}">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card">
+        <h2>Usuarios</h2>
+        <div class="table-wrap">
+            <table>
+                <tr><th>Id</th><th>Documento</th><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th>
+                    <th th:if="${role == 'ADMINISTRATOR'}">Acciones</th></tr>
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.id()}"></td>
+                    <td th:text="${u.identityDocument()}"></td>
+                    <td th:text="${u.fullName()}"></td>
+                    <td th:text="${u.email()}"></td>
+                    <td th:text="${labels.getOrDefault(u.role(), u.role())}"></td>
+                    <td><span class="badge" th:text="${labels.getOrDefault(u.status(), u.status())}"></span></td>
+                    <td th:if="${role == 'ADMINISTRATOR'}">
+                        <form th:action="@{/users/{id}/status(id=${u.id()})}" method="post" class="inline-action"
+                              th:unless="${u.id() == currentUser.id()}">
+                            <input type="hidden" name="active" th:value="${u.status() != 'ACTIVE'}">
+                            <button type="submit" class="small ghost"
+                                    th:text="${u.status() == 'ACTIVE'} ? 'Inactivar' : 'Activar'"></button>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

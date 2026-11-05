@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Facturas')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card">
+        <h2>Facturas</h2>
+        <p class="muted" th:if="${#lists.isEmpty(invoices)}">No hay facturas.</p>
+        <div class="table-wrap" th:unless="${#lists.isEmpty(invoices)}">
+            <table>
+                <tr><th>Id</th><th>Orden</th><th>Total</th><th>Fecha de emision</th></tr>
+                <tr th:each="f : ${invoices}">
+                    <td th:text="${f.id()}"></td>
+                    <td th:text="${f.orderId()}"></td>
+                    <td th:text="${#numbers.formatDecimal(f.total(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td th:text="${#temporals.format(f.issueDate(), 'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
