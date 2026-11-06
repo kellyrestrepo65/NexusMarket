@@ -1,6 +1,5 @@
 package com.nexusmarket.application.adapters.in.web.controllers;
 
-import com.nexusmarket.application.adapters.in.rest.responses.Responses.ProductResponse;
 import com.nexusmarket.application.adapters.in.web.support.WebSession;
 import com.nexusmarket.domain.models.cart.ShoppingCart;
 import com.nexusmarket.domain.models.catalog.Product;
@@ -56,8 +55,8 @@ public class CartWebController {
 
     @GetMapping("/catalog")
     public String catalog(HttpSession session, Model model) {
-        model.addAttribute("products", consultCatalogUseCase.executePublished(WebSession.actor(session))
-                .stream().map(ProductResponse::from).toList());
+        EntityId actorId = WebSession.actor(session);
+        model.addAttribute("entries", consultCatalogUseCase.executeShowcase(actorId));
         return "catalog";
     }
 
@@ -113,7 +112,8 @@ public class CartWebController {
     @PostMapping("/cart/checkout")
     public String checkout(HttpSession session, RedirectAttributes redirect) {
         Order order = checkoutUseCase.execute(WebSession.actor(session));
-        redirect.addFlashAttribute("success", "Orden " + order.getId() + " creada; queda pendiente de pago.");
-        return "redirect:/orders";
+        redirect.addFlashAttribute("success", "Orden " + order.getId() + " creada. Completa el pago para recibir tu factura.");
+        // se lleva al comprador directo al paso de pago
+        return "redirect:/orders/" + order.getId();
     }
 }

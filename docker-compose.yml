@@ -6,7 +6,39 @@ services:
       MYSQL_DATABASE: nexusmarket
     ports:
       - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    # la app espera a que MySQL acepte conexiones
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
   mongo:
     image: mongo:7
     ports:
       - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  # la app solo arranca con: docker compose --profile app up -d
+  app:
+    build: .
+    profiles: ["app"]
+    ports:
+      - "8080:8080"
+    environment:
+      MYSQL_URL: jdbc:mysql://mysql:3306/nexusmarket?createDatabaseIfNotExist=true
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MONGO_URI: mongodb://mongo:27017/nexusmarket
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+
+volumes:
+  mysql-data:
+  mongo-data:

@@ -36,6 +36,7 @@ import java.util.stream.Stream;
  * la configuracion la primera vez que arranca la plataforma.
  */
 @Component
+@org.springframework.core.annotation.Order(1)
 public class StartupInitializer implements ApplicationRunner {
 
     private final UserJpaRepository userJpaRepository;

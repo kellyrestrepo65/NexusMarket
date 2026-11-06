@@ -20,6 +20,7 @@ spring:
       uri: ${MONGO_URI:mongodb://localhost:27017/nexusmarket}
 
 nexusmarket:
+  demo-data: ${DEMO_DATA:true}
   seed:
     admin:
       document: ${SEED_ADMIN_DOCUMENT:1000000001}

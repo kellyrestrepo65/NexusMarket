@@ -5,6 +5,7 @@ import com.nexusmarket.application.adapters.in.web.support.WebMenu;
 import com.nexusmarket.application.adapters.in.web.support.WebSession;
 import com.nexusmarket.domain.exceptions.DomainException;
 import com.nexusmarket.domain.exceptions.UnauthenticatedException;
+import com.nexusmarket.domain.ports.in.ConsultCartUseCase;
 import com.nexusmarket.domain.ports.in.ConsultUserUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -29,9 +30,11 @@ import java.util.List;
 public class WebControllerAdvice {
 
     private final ConsultUserUseCase consultUserUseCase;
+    private final ConsultCartUseCase consultCartUseCase;
 
-    public WebControllerAdvice(ConsultUserUseCase consultUserUseCase) {
+    public WebControllerAdvice(ConsultUserUseCase consultUserUseCase, ConsultCartUseCase consultCartUseCase) {
         this.consultUserUseCase = consultUserUseCase;
+        this.consultCartUseCase = consultCartUseCase;
     }
 
     @ModelAttribute
@@ -51,6 +54,17 @@ public class WebControllerAdvice {
         model.addAttribute("menu", menu);
         model.addAttribute("labels", WebMenu.LABELS);
         model.addAttribute("currentPath", request.getRequestURI());
+        // unidades en el carrito para la pildora del menu (solo compradores)
+        int cartCount = 0;
+        if (currentUser != null && "BUYER".equals(currentUser.role())) {
+            try {
+                cartCount = consultCartUseCase.execute(WebSession.actor(session)).getItems().stream()
+                        .mapToInt(item -> item.getQuantity()).sum();
+            } catch (DomainException e) {
+                cartCount = 0;
+            }
+        }
+        model.addAttribute("cartCount", cartCount);
     }
 
     @ExceptionHandler(UnauthenticatedException.class)

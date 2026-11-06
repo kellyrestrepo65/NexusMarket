@@ -21,7 +21,7 @@
                     <td><span class="badge" th:text="${labels.getOrDefault(u.status(), u.status())}"></span></td>
                     <td th:if="${role == 'ADMINISTRATOR'}">
                         <form th:action="@{/users/{id}/status(id=${u.id()})}" method="post" class="inline-action"
-                              th:unless="${u.id() == currentUser.id()}">
+                              th:if="${u.role() == 'SELLER'}">
                             <input type="hidden" name="active" th:value="${u.status() != 'ACTIVE'}">
                             <button type="submit" class="small ghost"
                                     th:text="${u.status() == 'ACTIVE'} ? 'Inactivar' : 'Activar'"></button>

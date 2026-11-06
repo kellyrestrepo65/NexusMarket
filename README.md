@@ -85,6 +85,10 @@ Colores: azul = adaptador de entrada, amarillo = puerto de entrada, rojo = domin
 4. Pruebas: `mvn test` (unitarias + integracion contra MySQL y MongoDB en bases `nexusmarket_test`) y `python scripts/smoke_test.py 100000 100001 100002`.
 5. Guia de sustentacion: [docs/guia-sustentacion.md](docs/guia-sustentacion.md).
 
+### Todo con Docker (sin Maven ni Java instalados)
+
+`docker compose --profile app up -d --build` compila la app con el `Dockerfile` y levanta MySQL, MongoDB y la aplicacion en http://localhost:8080. Para ver el arranque: `docker compose logs -f app`. Para apagar: `docker compose --profile app down`.
+
 ## Configuracion (`src/main/resources/application.yml`)
 
 | Propiedad                                       | Para que sirve                                                                                                                                  |

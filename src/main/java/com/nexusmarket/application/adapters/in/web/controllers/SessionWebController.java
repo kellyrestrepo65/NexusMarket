@@ -6,6 +6,8 @@ import com.nexusmarket.domain.models.user.Buyer;
 import com.nexusmarket.domain.models.user.User;
 import com.nexusmarket.domain.ports.in.ConsultUserUseCase;
 import com.nexusmarket.domain.ports.in.RegisterBuyerUseCase;
+import com.nexusmarket.domain.ports.out.UserRepositoryPort;
+import org.springframework.beans.factory.annotation.Value;
 import com.nexusmarket.domain.valueobjects.Address;
 import com.nexusmarket.domain.valueobjects.EntityId;
 import jakarta.servlet.http.HttpSession;
@@ -23,9 +25,20 @@ public class SessionWebController {
     private final ConsultUserUseCase consultUserUseCase;
     private final RegisterBuyerUseCase registerBuyerUseCase;
 
-    public SessionWebController(ConsultUserUseCase consultUserUseCase, RegisterBuyerUseCase registerBuyerUseCase) {
+    private final UserRepositoryPort userRepositoryPort;
+    private final boolean demoData;
+
+    public SessionWebController(ConsultUserUseCase consultUserUseCase, RegisterBuyerUseCase registerBuyerUseCase,
+                                UserRepositoryPort userRepositoryPort,
+                                @Value("${nexusmarket.demo-data:false}") boolean demoData) {
         this.consultUserUseCase = consultUserUseCase;
         this.registerBuyerUseCase = registerBuyerUseCase;
+        this.userRepositoryPort = userRepositoryPort;
+        this.demoData = demoData;
+    }
+
+    // Cuenta de prueba que se muestra en el ingreso para no tener que buscar ids en el log
+    public record DemoAccount(String id, String name, String role) {
     }
 
     @GetMapping("/")
@@ -45,7 +58,13 @@ public class SessionWebController {
     }
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(Model model) {
+        if (demoData) {
+            model.addAttribute("demoAccounts", userRepositoryPort.findAll().stream()
+                    .map(u -> new DemoAccount(u.getId().toString(), u.getFullName(),
+                            WebMenu.LABELS.getOrDefault(u.getRole().name(), u.getRole().name())))
+                    .toList());
+        }
         return "login";
     }
 

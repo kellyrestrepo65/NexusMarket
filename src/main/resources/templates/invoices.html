@@ -11,12 +11,14 @@
         <p class="muted" th:if="${#lists.isEmpty(invoices)}">No hay facturas.</p>
         <div class="table-wrap" th:unless="${#lists.isEmpty(invoices)}">
             <table>
-                <tr><th>Id</th><th>Orden</th><th>Total</th><th>Fecha de emision</th></tr>
+                <tr><th>Id</th><th>Orden</th><th>Cliente</th><th>Total</th><th>Fecha de emision</th><th></th></tr>
                 <tr th:each="f : ${invoices}">
                     <td th:text="${f.id()}"></td>
-                    <td th:text="${f.orderId()}"></td>
-                    <td th:text="${#numbers.formatDecimal(f.total(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td><a th:href="@{/orders/{id}(id=${f.orderId()})}" th:text="${f.orderId()}"></a></td>
+                    <td th:text="${f.buyerName()}"></td>
+                    <td th:text="'$ ' + ${#numbers.formatDecimal(f.total(), 1, 'POINT', 2, 'COMMA')}"></td>
                     <td th:text="${#temporals.format(f.issueDate(), 'yyyy-MM-dd HH:mm')}"></td>
+                    <td><a class="btn btn-small" th:href="@{/invoices/{id}(id=${f.id()})}">Ver factura</a></td>
                 </tr>
             </table>
         </div>

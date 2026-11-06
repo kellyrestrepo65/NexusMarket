@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Orden')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container" th:with="role=${currentUser.role()}">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="page-head">
+        <div>
+            <h1 th:text="'Orden ' + ${order.id()}"></h1>
+            <p class="muted">
+                <span th:text="${order.buyerName()}"></span> ·
+                <span th:text="${order.units()} + ' unidades'"></span>
+            </p>
+        </div>
+        <span class="badge" th:text="${labels.getOrDefault(order.status(), order.status())}"></span>
+        <a th:href="@{/orders}" class="back-link">Volver a ordenes</a>
+    </div>
+
+    <div class="order-layout">
+        <section class="card">
+            <h2>Productos</h2>
+            <div class="table-wrap">
+                <table>
+                    <tr><th>Producto</th><th>Cantidad</th><th>Precio unitario</th><th>Subtotal</th></tr>
+                    <tr th:each="l : ${order.lines()}">
+                        <td th:text="${l.name()}"></td>
+                        <td th:text="${l.quantity()}"></td>
+                        <td th:text="'$ ' + ${#numbers.formatDecimal(l.unitPrice(), 1, 'POINT', 2, 'COMMA')}"></td>
+                        <td th:text="'$ ' + ${#numbers.formatDecimal(l.subtotal(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    </tr>
+                </table>
+            </div>
+            <p class="order-total">Total
+                <b th:text="'$ ' + ${#numbers.formatDecimal(order.total(), 1, 'POINT', 2, 'COMMA')}"></b></p>
+        </section>
+
+        <!-- paso de pago: solo el comprador y solo si la orden sigue pendiente -->
+        <section class="card pay-card" th:if="${role == 'BUYER' and order.status() == 'PENDING_PAYMENT'}">
+            <h2>Pagar orden</h2>
+            <p class="muted small">Al confirmar el pago se emite tu factura.</p>
+            <form th:action="@{/orders/{id}/payment(id=${order.id()})}" method="post" class="form">
+                <button type="submit" class="btn pay-button"
+                        th:text="'Pagar $ ' + ${#numbers.formatDecimal(order.total(), 1, 'POINT', 2, 'COMMA')}"></button>
+            </form>
+        </section>
+
+        <section class="card pay-card" th:if="${order.invoiceId() != null}">
+            <h2>Factura</h2>
+            <p class="muted small">Esta orden ya fue pagada y tiene factura emitida.</p>
+            <a class="btn btn-link" th:href="@{/invoices/{id}(id=${order.invoiceId()})}"
+               th:text="'Ver factura ' + ${order.invoiceId()}"></a>
+        </section>
+    </div>
+</main>
+</body>
+</html>

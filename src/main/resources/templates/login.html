@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head th:replace="~{fragments/layout :: head('Ingresar')}"></head>
-<body>
-<header th:replace="~{fragments/layout :: topbar}"></header>
-<main class="container">
+<body class="auth-page">
+<main class="auth">
+    <div class="brand auth-brand">nexus<span>market</span></div>
     <div th:replace="~{fragments/layout :: alerts}"></div>
-    <section class="card narrow">
+
+    <section class="card" id="loginCard">
         <h2>Ingresar</h2>
-        <p class="muted">Ingresa con tu id de usuario. Internos de prueba: 100000 administrador,
+        <p class="muted small">Ingresa con tu id de usuario. Internos de prueba: 100000 administrador,
             100001 operador logistico, 100002 supervisor.</p>
         <form th:action="@{/login}" method="post" class="form">
-            <label>Id de usuario <input name="userId" required></label>
+            <label>Id de usuario <input name="userId" required autofocus></label>
             <button type="submit">Ingresar</button>
         </form>
+        <p class="switch">¿No tienes cuenta? <a href="#" onclick="showRegister(true); return false;">Registrarme como comprador</a></p>
+        <!-- cuentas de prueba: un clic llena el id -->
+        <div class="demo" th:if="${demoAccounts != null and !#lists.isEmpty(demoAccounts)}">
+            <p class="muted small">Cuentas de prueba (clic para usar):</p>
+            <button type="button" class="demo-account" th:each="a : ${demoAccounts}"
+                    th:attr="data-id=${a.id()}" onclick="useAccount(this)">
+                <b th:text="${a.name()}">Nombre</b>
+                <span th:text="${a.role()} + ' · ' + ${a.id()}">Rol</span>
+            </button>
+        </div>
     </section>
-    <section class="card narrow">
+
+    <section class="card hidden" id="registerCard">
         <h2>Registrarme como comprador</h2>
         <form th:action="@{/register}" method="post" class="form">
             <label>Documento <input name="identityDocument" required></label>
@@ -31,7 +43,21 @@
             </div>
             <button type="submit">Registrarme</button>
         </form>
+        <p class="switch">¿Ya tienes cuenta? <a href="#" onclick="showRegister(false); return false;">Ingresar</a></p>
     </section>
 </main>
+<script>
+    // llena el id con la cuenta de prueba elegida
+    function useAccount(btn) {
+        var input = document.querySelector('input[name=userId]');
+        input.value = btn.dataset.id;
+        input.focus();
+    }
+    // alterna entre el formulario de ingreso y el de registro
+    function showRegister(show) {
+        document.getElementById('loginCard').classList.toggle('hidden', show);
+        document.getElementById('registerCard').classList.toggle('hidden', !show);
+    }
+</script>
 </body>
 </html>

@@ -13,16 +13,17 @@
             <table>
                 <tr><th>Id</th><th>Comprador</th><th>Estado</th><th>Items</th><th>Total</th><th>Acciones</th></tr>
                 <tr th:each="o : ${orders}">
-                    <td th:text="${o.id()}"></td>
-                    <td th:text="${o.buyerId()}"></td>
+                    <td><a th:href="@{/orders/{id}(id=${o.id()})}" th:text="${o.id()}"></a></td>
+                    <td th:text="${o.buyerName()}"></td>
                     <td><span class="badge" th:text="${labels.getOrDefault(o.status(), o.status())}"></span></td>
-                    <td><div th:each="i : ${o.items()}" th:text="${i.quantity()} + ' x ' + ${i.productId()}"></div></td>
-                    <td th:text="${#numbers.formatDecimal(o.total(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td><div th:each="l : ${o.lines()}" th:text="${l.quantity()} + ' x ' + ${l.name()}"></div></td>
+                    <td th:text="'$ ' + ${#numbers.formatDecimal(o.total(), 1, 'POINT', 2, 'COMMA')}"></td>
                     <td><div class="actions">
-                        <form th:if="${role == 'BUYER' and o.status() == 'PENDING_PAYMENT'}"
-                              th:action="@{/orders/{id}/payment(id=${o.id()})}" method="post" class="inline-action">
-                            <button type="submit" class="small">Pagar</button>
-                        </form>
+                        <a th:if="${role == 'BUYER' and o.status() == 'PENDING_PAYMENT'}" class="btn btn-small"
+                           th:href="@{/orders/{id}(id=${o.id()})}">Pagar</a>
+                        <a th:if="${o.invoiceId() != null}" class="link-small"
+                           th:href="@{/invoices/{id}(id=${o.invoiceId()})}">Ver factura</a>
+                        <a th:href="@{/orders/{id}(id=${o.id()})}" class="link-small">Detalle</a>
                         <form th:if="${role == 'LOGISTICS_OPERATOR' and o.status() == 'PAID'}"
                               th:action="@{/orders/{id}/dispatch(id=${o.id()})}" method="post" class="inline-action">
                             <button type="submit" class="small">Despachar</button>

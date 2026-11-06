@@ -4,25 +4,76 @@
 <body>
 <header th:replace="~{fragments/layout :: topbar}"></header>
 <main class="container">
-    <nav th:replace="~{fragments/layout :: nav}"></nav>
     <div th:replace="~{fragments/layout :: alerts}"></div>
-    <h2>Catalogo publicado</h2>
-    <p class="muted" th:if="${#lists.isEmpty(products)}">No hay productos publicados.</p>
-    <div class="grid">
-        <section class="card" th:each="p : ${products}">
-            <h3 th:text="${p.name()}">Producto</h3>
-            <p><b th:text="'$ ' + ${#numbers.formatDecimal(p.price(), 1, 'POINT', 2, 'COMMA')}"></b>
-                <span class="badge" th:text="${labels.getOrDefault(p.type(), p.type())}"></span></p>
-            <p class="muted">
-                <span th:each="v : ${p.variants()}" th:text="${v.attribute()} + ': ' + ${v.value()} + ' '"></span>
-            </p>
-            <form th:action="@{/cart/items}" method="post" class="form inline">
-                <input type="hidden" name="productId" th:value="${p.id()}">
-                <input type="number" name="quantity" value="1" min="1">
-                <button type="submit" class="small">Agregar</button>
-            </form>
-        </section>
+    <!-- bienvenida con buscador y filtros -->
+    <section class="hero">
+        <div class="hero-text">
+            <h1 th:text="'Hola, ' + ${#strings.arraySplit(currentUser.fullName(), ' ')[0]}">Hola</h1>
+            <span class="muted" th:text="${#lists.size(entries)} + ' productos de ' + ${#sets.size(#sets.toSet(entries.![sellerName()]))} + ' vendedores, listos para enviar o descargar.'">Productos</span>
+        </div>
+        <div class="hero-tools">
+            <label class="search">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                <input id="q" placeholder="Buscar productos..." aria-label="Buscar productos" oninput="filterProducts()">
+            </label>
+            <div class="pills">
+                <button type="button" class="pill active" data-filter="">Todos</button>
+                <button type="button" class="pill" data-filter="PHYSICAL">Fisicos</button>
+                <button type="button" class="pill" data-filter="DIGITAL">Digitales</button>
+                <button type="button" class="pill" data-filter="STOCK">Con stock</button>
+            </div>
+        </div>
+    </section>
+    <p class="muted" th:if="${#lists.isEmpty(entries)}">No hay productos publicados.</p>
+    <div class="product-grid">
+        <article class="product" th:each="e, st : ${entries}" th:with="p=${e.product()}, digital=${p.type.name() == 'DIGITAL'}"
+                 th:attr="data-name=${#strings.toLowerCase(p.name)},data-type=${p.type.name()},data-stock=${digital or e.freeStock() > 0}">
+            <div class="product-band" th:classappend="'tint' + ${st.index % 4}">
+                <svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
+            </div>
+            <div class="product-body">
+                <div class="product-title">
+                    <b class="product-name" th:text="${p.name}">Producto</b>
+                    <b class="price" th:text="'$ ' + ${#numbers.formatDecimal(p.price, 1, 'POINT', 0, 'COMMA')}"></b>
+                </div>
+                <span class="meta">
+                    <span th:text="${e.sellerName()} + ' · ' + ${labels.getOrDefault(p.type.name(), p.type.name())} + ' · '">Vendedor</span>
+                    <span class="stock" th:if="${digital}">Inmediata</span>
+                    <span class="stock" th:unless="${digital}"
+                          th:classappend="${e.freeStock() == 0} ? 'out' : (${e.freeStock() <= 3} ? 'low')"
+                          th:text="${e.freeStock() == 0} ? 'Agotado' : (${e.freeStock() <= 3} ? 'Quedan ' + ${e.freeStock()} : ${e.freeStock()} + ' disponibles')"></span>
+                </span>
+                <span class="muted small" th:unless="${#lists.isEmpty(p.variants)}">
+                    <span th:each="v : ${p.variants}" th:text="${v.attribute} + ': ' + ${v.value} + ' '"></span>
+                </span>
+                <form th:action="@{/cart/items}" method="post" class="add-form">
+                    <input type="hidden" name="productId" th:value="${p.id}">
+                    <input type="number" name="quantity" value="1" min="1" aria-label="Cantidad">
+                    <button type="submit" class="outline" th:disabled="${!digital and e.freeStock() == 0}">Agregar</button>
+                </form>
+            </div>
+        </article>
     </div>
 </main>
+<script>
+    // filtro local por nombre, tipo y stock, sin llamar al servidor
+    var currentFilter = '';
+    function filterProducts() {
+        var q = document.getElementById('q').value.toLowerCase();
+        document.querySelectorAll('.product').forEach(function (el) {
+            var byFilter = !currentFilter
+                || (currentFilter === 'STOCK' ? el.dataset.stock === 'true' : el.dataset.type === currentFilter);
+            el.style.display = el.dataset.name.indexOf(q) >= 0 && byFilter ? '' : 'none';
+        });
+    }
+    document.querySelectorAll('.pill').forEach(function (b) {
+        b.addEventListener('click', function () {
+            document.querySelectorAll('.pill').forEach(function (x) { x.classList.remove('active'); });
+            b.classList.add('active');
+            currentFilter = b.dataset.filter;
+            filterProducts();
+        });
+    });
+</script>
 </body>
 </html>
