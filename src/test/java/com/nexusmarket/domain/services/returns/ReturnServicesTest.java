@@ -22,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import static com.nexusmarket.domain.services.Fixtures.BUYER_ID;
 import static com.nexusmarket.domain.services.Fixtures.PRODUCT_ID;
@@ -75,12 +74,15 @@ class ReturnServicesTest {
         order.advanceTo(OrderStatus.DELIVERED);
         when(authorizationService.requireRole(BUYER_ID, Role.BUYER)).thenReturn(buyer());
         when(orderLoader.load(ORDER_ID)).thenReturn(order);
-        when(returnRepositoryPort.findByOrderId(ORDER_ID)).thenReturn(Optional.empty());
+        when(returnRepositoryPort.findByOrderId(ORDER_ID)).thenReturn(List.of());
+        when(orderLoader.product(any())).thenReturn(physicalProduct());
         when(returnRepositoryPort.save(any())).thenAnswer(i -> i.getArgument(0));
 
-        Return result = requestService().execute(BUYER_ID, ORDER_ID, "Llego roto");
+        Return result = requestService().execute(BUYER_ID, ORDER_ID, PRODUCT_ID, "Llego roto");
 
         assertEquals(ReturnStatus.REQUESTED, result.getStatus());
+        assertEquals(PRODUCT_ID, result.getProductId());
+        assertEquals(2, result.getQuantity());
     }
 
     @Test
@@ -88,7 +90,7 @@ class ReturnServicesTest {
         when(authorizationService.requireRole(BUYER_ID, Role.BUYER)).thenReturn(buyer());
         when(orderLoader.load(ORDER_ID)).thenReturn(order);
 
-        assertThrows(BusinessRuleException.class, () -> requestService().execute(BUYER_ID, ORDER_ID, "x"));
+        assertThrows(BusinessRuleException.class, () -> requestService().execute(BUYER_ID, ORDER_ID, PRODUCT_ID, "x"));
         verify(returnRepositoryPort, never()).save(any());
     }
 

@@ -22,8 +22,14 @@ public class ReturnEntity {
     @Id
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private Integer orderId;
+
+    private Integer productId;
+
+    private Integer sellerId;
+
+    private Integer quantity;
 
     @Column(nullable = false)
     private String reason;
@@ -47,6 +53,9 @@ public class ReturnEntity {
         ReturnEntity entity = new ReturnEntity();
         entity.id = orderReturn.getId().value();
         entity.orderId = orderReturn.getOrderId().value();
+        entity.productId = orderReturn.getProductId() == null ? null : orderReturn.getProductId().value();
+        entity.sellerId = orderReturn.getSellerId() == null ? null : orderReturn.getSellerId().value();
+        entity.quantity = orderReturn.getQuantity();
         entity.reason = orderReturn.getReason();
         entity.status = orderReturn.getStatus();
         Refund refund = orderReturn.getRefund();
@@ -62,6 +71,9 @@ public class ReturnEntity {
         EntityId returnId = EntityId.of(id);
         Refund refund = refundId == null ? null
                 : Refund.restore(EntityId.of(refundId), returnId, refundAmount, refundStatus);
-        return Return.restore(returnId, EntityId.of(orderId), reason, status, refund);
+        return Return.restore(returnId, EntityId.of(orderId),
+                productId == null ? null : EntityId.of(productId),
+                sellerId == null ? null : EntityId.of(sellerId),
+                quantity == null ? 0 : quantity, reason, status, refund);
     }
 }

@@ -26,13 +26,16 @@ public final class WebMenu {
     private static final Item SELLERS = new Item("/sellers/new", "Registrar vendedor");
     private static final Item REPORT = new Item("/report", "Reporte");
     private static final Item PROFILE = new Item("/profile", "Mi perfil");
+    private static final Item SELLER_REPORTS = new Item("/seller-reports", "Reporte vendedores");
+    private static final Item MY_REPORT = new Item("/seller-reports", "Mi reporte");
 
     private static final Map<String, List<Item>> BY_ROLE = Map.of(
             "BUYER", List.of(CATALOG, CART, ORDERS, RETURNS, INVOICES, SHIPMENTS, PROFILE),
-            "SELLER", List.of(PRODUCTS, INVENTORY, WAREHOUSES, ORDERS, PROFILE),
+            "SELLER", List.of(PRODUCTS, INVENTORY, WAREHOUSES, ORDERS, MY_REPORT, PROFILE),
             "LOGISTICS_OPERATOR", List.of(ORDERS, SHIPMENTS, INVENTORY, WAREHOUSES, PROFILE),
-            "ADMINISTRATOR", List.of(USERS, SELLERS, WAREHOUSES, RETURNS, INVOICES, SHIPMENTS, REPORT, PROFILE),
-            "SUPERVISOR", List.of(REPORT, USERS, WAREHOUSES, INVENTORY, ORDERS, INVOICES, SHIPMENTS, RETURNS, PROFILE));
+            "ADMINISTRATOR", List.of(USERS, SELLERS, WAREHOUSES, RETURNS, INVOICES, SHIPMENTS, REPORT, SELLER_REPORTS,
+                    PROFILE),
+            "SUPERVISOR", List.of(REPORT, SELLER_REPORTS, USERS, WAREHOUSES, INVENTORY, ORDERS, INVOICES, SHIPMENTS, RETURNS, PROFILE));
 
     public static final Map<String, String> LABELS = Map.ofEntries(
             Map.entry("BUYER", "Comprador"), Map.entry("SELLER", "Vendedor"),

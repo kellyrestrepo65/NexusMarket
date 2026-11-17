@@ -14,12 +14,15 @@ import com.nexusmarket.domain.services.order.OrderLoader;
 import com.nexusmarket.domain.services.security.AuthorizationService;
 import com.nexusmarket.domain.ports.in.ReviewReturnUseCase;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * OBJ-11 "Devoluciones": el Administrador aprueba o rechaza una devolucion
- * solicitada. Al aprobarla se crea un reembolso pendiente por el total de la
- * orden y las unidades fisicas vuelven como disponibles a la primera bodega del
+ * solicitada. Al aprobarla se crea un reembolso pendiente solo por el subtotal
+ * del producto devuelto y sus unidades fisicas vuelven como disponibles a la primera bodega del
  * producto.
  */
 @Service
@@ -47,8 +50,12 @@ public class ReviewReturnService implements ReviewReturnUseCase {
         authorizationService.requireRole(actorId, Role.ADMINISTRATOR);
         Return orderReturn = returnLoader.load(returnId);
         Order order = orderLoader.load(orderReturn.getOrderId());
-        orderReturn.approve(EntityId.next(), order.calculateTotal());
-        for (OrderItem item : order.getItems()) {
+        List<OrderItem> affected = order.getItems().stream()
+                .filter(item -> orderReturn.isForProduct(item.getProductId()))
+                .toList();
+        BigDecimal amount = affected.stream().map(OrderItem::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+        orderReturn.approve(EntityId.next(), amount);
+        for (OrderItem item : affected) {
             Product product = orderLoader.product(item);
             if (product.requiresPhysicalShipping()) {
                 restock(product.getId(), item.getQuantity());

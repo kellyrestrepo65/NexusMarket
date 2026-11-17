@@ -41,9 +41,9 @@ public class ReturnWebController {
     }
 
     @PostMapping("/returns")
-    public String request(@RequestParam String orderId, @RequestParam String reason, HttpSession session,
-                          RedirectAttributes redirect) {
-        requestReturnUseCase.execute(WebSession.actor(session), EntityId.of(orderId), reason);
+    public String request(@RequestParam String orderId, @RequestParam String productId,
+                          @RequestParam String reason, HttpSession session, RedirectAttributes redirect) {
+        requestReturnUseCase.execute(WebSession.actor(session), EntityId.of(orderId), EntityId.of(productId), reason);
         redirect.addFlashAttribute("success", "Devolucion solicitada");
         return "redirect:/returns";
     }

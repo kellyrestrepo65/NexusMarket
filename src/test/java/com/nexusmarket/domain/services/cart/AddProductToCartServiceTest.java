@@ -8,6 +8,9 @@ import com.nexusmarket.domain.models.user.Buyer;
 import com.nexusmarket.domain.enums.Role;
 import com.nexusmarket.domain.ports.out.ProductRepositoryPort;
 import com.nexusmarket.domain.ports.out.ShoppingCartRepositoryPort;
+import com.nexusmarket.domain.ports.out.InventoryRepositoryPort;
+import com.nexusmarket.domain.exceptions.InsufficientInventoryException;
+import java.util.List;
 import com.nexusmarket.domain.services.security.AuthorizationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +23,7 @@ import java.util.Optional;
 import static com.nexusmarket.domain.services.Fixtures.BUYER_ID;
 import static com.nexusmarket.domain.services.Fixtures.PRODUCT_ID;
 import static com.nexusmarket.domain.services.Fixtures.buyer;
+import static com.nexusmarket.domain.services.Fixtures.inventory;
 import static com.nexusmarket.domain.services.Fixtures.physicalProduct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -37,6 +41,10 @@ class AddProductToCartServiceTest {
     private ProductRepositoryPort productRepositoryPort;
     @Mock
     private ShoppingCartRepositoryPort shoppingCartRepositoryPort;
+    @Mock
+    private CartStockValidator cartStockValidator;
+    @Mock
+    private InventoryRepositoryPort inventoryRepositoryPort;
 
     @InjectMocks
     private AddProductToCartService service;
@@ -80,5 +88,18 @@ class AddProductToCartServiceTest {
         when(productRepositoryPort.findById(PRODUCT_ID)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> service.execute(BUYER_ID, PRODUCT_ID, 1));
+    }
+
+    @Test
+    void quantityAboveStockIsBlocked() {
+        when(authorizationService.requireRole(BUYER_ID, Role.BUYER)).thenReturn(buyer());
+        when(productRepositoryPort.findById(PRODUCT_ID)).thenReturn(Optional.of(physicalProduct()));
+        when(shoppingCartRepositoryPort.findByBuyerId(BUYER_ID)).thenReturn(Optional.empty());
+        when(inventoryRepositoryPort.findByProductId(PRODUCT_ID)).thenReturn(List.of(inventory(1, 3)));
+        AddProductToCartService real = new AddProductToCartService(authorizationService, productRepositoryPort,
+                shoppingCartRepositoryPort, new CartStockValidator(inventoryRepositoryPort));
+
+        assertThrows(InsufficientInventoryException.class, () -> real.execute(BUYER_ID, PRODUCT_ID, 4));
+        verify(shoppingCartRepositoryPort, never()).save(any());
     }
 }

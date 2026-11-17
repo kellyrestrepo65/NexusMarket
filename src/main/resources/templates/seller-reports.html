@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Reporte de vendedores')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <h2>Reporte de vendedores</h2>
+    <p th:if="${#lists.isEmpty(sellerReports)}">No hay vendedores registrados.</p>
+    <section class="card" th:each="s : ${sellerReports}">
+        <h3 th:text="${s.sellerName()} + ' (id ' + ${s.sellerId()} + ')'"></h3>
+        <div class="grid">
+            <div class="stat"><span>Productos</span> <b th:text="${s.productCount()}"></b></div>
+            <div class="stat"><span>Unidades vendidas</span> <b th:text="${s.unitsSold()}"></b></div>
+            <div class="stat"><span>Ventas brutas</span> <b th:text="${#numbers.formatDecimal(s.grossSales(), 1, 'POINT', 2, 'COMMA')}"></b></div>
+            <div class="stat"><span>Unidades devueltas</span> <b th:text="${s.unitsReturned()}"></b></div>
+            <div class="stat"><span>Reembolsado</span> <b th:text="${#numbers.formatDecimal(s.refundedAmount(), 1, 'POINT', 2, 'COMMA')}"></b></div>
+            <div class="stat"><span>Reembolso pendiente</span> <b th:text="${#numbers.formatDecimal(s.pendingRefundAmount(), 1, 'POINT', 2, 'COMMA')}"></b></div>
+            <div class="stat"><span>Ventas netas</span> <b th:text="${#numbers.formatDecimal(s.netSales(), 1, 'POINT', 2, 'COMMA')}"></b></div>
+            <div class="stat"><span>Stock disponible / reservado</span> <b th:text="${s.availableUnits()} + ' / ' + ${s.reservedUnits()}"></b></div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <tr><th>Id</th><th>Producto</th><th>Tipo</th><th>Estado</th><th>Vendidas</th><th>Ventas</th>
+                    <th>Devueltas</th><th>Reembolsado</th><th>Pendiente</th><th>Disponible</th><th>Reservado</th><th>Danado</th></tr>
+                <tr th:each="p : ${s.products()}">
+                    <td th:text="${p.productId()}"></td>
+                    <td th:text="${p.name()}"></td>
+                    <td th:text="${labels.getOrDefault(p.type(), p.type())}"></td>
+                    <td th:text="${labels.getOrDefault(p.status(), p.status())}"></td>
+                    <td th:text="${p.unitsSold()}"></td>
+                    <td th:text="${#numbers.formatDecimal(p.sales(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td th:text="${p.unitsReturned()}"></td>
+                    <td th:text="${#numbers.formatDecimal(p.refundedAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td th:text="${#numbers.formatDecimal(p.pendingRefundAmount(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td th:text="${p.type() == 'DIGITAL'} ? '-' : ${p.availableUnits()}"></td>
+                    <td th:text="${p.type() == 'DIGITAL'} ? '-' : ${p.reservedUnits()}"></td>
+                    <td th:text="${p.type() == 'DIGITAL'} ? '-' : ${p.damagedUnits()}"></td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>

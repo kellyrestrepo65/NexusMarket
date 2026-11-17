@@ -10,6 +10,7 @@
         <h2>Solicitar devolucion</h2>
         <form th:action="@{/returns}" method="post" class="form">
             <label>Id de la orden entregada <input name="orderId" required></label>
+            <label>Id del producto a devolver <input name="productId" required></label>
             <label>Motivo <input name="reason" required></label>
             <button type="submit">Solicitar</button>
         </form>
@@ -19,10 +20,13 @@
         <p class="muted" th:if="${#lists.isEmpty(returns)}">No hay devoluciones.</p>
         <div class="table-wrap" th:unless="${#lists.isEmpty(returns)}">
             <table>
-                <tr><th>Id</th><th>Orden</th><th>Motivo</th><th>Estado</th><th>Reembolso</th><th>Acciones</th></tr>
+                <tr><th>Id</th><th>Orden</th><th>Producto</th><th>Vendedor</th><th>Cant.</th><th>Motivo</th><th>Estado</th><th>Reembolso</th><th>Acciones</th></tr>
                 <tr th:each="r : ${returns}">
                     <td th:text="${r.id()}"></td>
                     <td th:text="${r.orderId()}"></td>
+                    <td th:text="${r.productId() ?: 'Orden completa'}"></td>
+                    <td th:text="${r.sellerId() ?: '-'}"></td>
+                    <td th:text="${r.quantity()}"></td>
                     <td th:text="${r.reason()}"></td>
                     <td><span class="badge" th:text="${labels.getOrDefault(r.status(), r.status())}"></span></td>
                     <td th:text="${r.refund() == null} ? '-' : ${#numbers.formatDecimal(r.refund().amount(), 1, 'POINT', 2, 'COMMA')} + ' (' + ${labels.getOrDefault(r.refund().status(), r.refund().status())} + ')'"></td>

@@ -24,8 +24,9 @@
             <h2>Productos</h2>
             <div class="table-wrap">
                 <table>
-                    <tr><th>Producto</th><th>Cantidad</th><th>Precio unitario</th><th>Subtotal</th></tr>
+                    <tr><th>Id</th><th>Producto</th><th>Cantidad</th><th>Precio unitario</th><th>Subtotal</th></tr>
                     <tr th:each="l : ${order.lines()}">
+                        <td th:text="${l.productId()}"></td>
                         <td th:text="${l.name()}"></td>
                         <td th:text="${l.quantity()}"></td>
                         <td th:text="'$ ' + ${#numbers.formatDecimal(l.unitPrice(), 1, 'POINT', 2, 'COMMA')}"></td>

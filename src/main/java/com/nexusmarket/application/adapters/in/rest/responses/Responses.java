@@ -109,11 +109,14 @@ public final class Responses {
     public record RefundResponse(String id, BigDecimal amount, String status) {
     }
 
-    public record ReturnResponse(String id, String orderId, String reason, String status, RefundResponse refund) {
+    public record ReturnResponse(String id, String orderId, String productId, String sellerId, int quantity,
+                                 String reason, String status, RefundResponse refund) {
         public static ReturnResponse from(Return orderReturn) {
             Refund refund = orderReturn.getRefund();
             return new ReturnResponse(text(orderReturn.getId()), text(orderReturn.getOrderId()),
-                    orderReturn.getReason(), orderReturn.getStatus().name(), refund == null ? null
+                    orderReturn.getProductId() == null ? null : text(orderReturn.getProductId()),
+                    orderReturn.getSellerId() == null ? null : text(orderReturn.getSellerId()),
+                    orderReturn.getQuantity(), orderReturn.getReason(), orderReturn.getStatus().name(), refund == null ? null
                     : new RefundResponse(text(refund.getId()), refund.getAmount(), refund.getStatus().name()));
         }
     }

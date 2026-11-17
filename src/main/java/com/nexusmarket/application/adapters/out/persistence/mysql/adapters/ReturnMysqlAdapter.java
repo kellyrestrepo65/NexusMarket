@@ -31,8 +31,8 @@ public class ReturnMysqlAdapter implements ReturnRepositoryPort {
     }
 
     @Override
-    public Optional<Return> findByOrderId(EntityId orderId) {
-        return returnJpaRepository.findByOrderId(orderId.value()).map(ReturnEntity::toDomain);
+    public List<Return> findByOrderId(EntityId orderId) {
+        return returnJpaRepository.findByOrderId(orderId.value()).stream().map(ReturnEntity::toDomain).toList();
     }
 
     @Override

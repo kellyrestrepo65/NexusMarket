@@ -62,6 +62,7 @@ public final class Requests {
     public record AddToCartRequest(@NotBlank String productId, @Positive int quantity) {
     }
 
-    public record RequestReturnRequest(@NotBlank String orderId, @NotBlank String reason) {
+    public record RequestReturnRequest(@NotBlank String orderId, @NotBlank String productId,
+                                       @NotBlank String reason) {
     }
 }

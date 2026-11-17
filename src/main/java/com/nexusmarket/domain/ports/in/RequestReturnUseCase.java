@@ -9,5 +9,6 @@ import com.nexusmarket.domain.valueobjects.EntityId;
  */
 public interface RequestReturnUseCase {
 
-    Return execute(EntityId actorId, EntityId orderId, String reason);
+    /** Devolucion de un solo producto de la orden (productId obligatorio). */
+    Return execute(EntityId actorId, EntityId orderId, EntityId productId, String reason);
 }

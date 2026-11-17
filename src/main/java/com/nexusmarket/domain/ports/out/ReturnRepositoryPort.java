@@ -12,7 +12,7 @@ public interface ReturnRepositoryPort {
 
     Optional<Return> findById(EntityId id);
 
-    Optional<Return> findByOrderId(EntityId orderId);
+    List<Return> findByOrderId(EntityId orderId);
 
     List<Return> findAll();
 }

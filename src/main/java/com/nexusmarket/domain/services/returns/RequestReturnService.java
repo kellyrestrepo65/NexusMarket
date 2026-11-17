@@ -4,6 +4,9 @@ import com.nexusmarket.domain.exceptions.BusinessRuleException;
 import com.nexusmarket.domain.exceptions.ForbiddenOperationException;
 import com.nexusmarket.domain.models.order.Order;
 import com.nexusmarket.domain.models.order.Return;
+import com.nexusmarket.domain.models.order.OrderItem;
+import com.nexusmarket.domain.models.catalog.Product;
+import com.nexusmarket.domain.enums.ReturnStatus;
 import com.nexusmarket.domain.models.user.User;
 import com.nexusmarket.domain.valueobjects.EntityId;
 import com.nexusmarket.domain.enums.OrderStatus;
@@ -33,7 +36,7 @@ public class RequestReturnService implements RequestReturnUseCase {
     }
 
     @Override
-    public Return execute(EntityId actorId, EntityId orderId, String reason) {
+    public Return execute(EntityId actorId, EntityId orderId, EntityId productId, String reason) {
         User buyer = authorizationService.requireRole(actorId, Role.BUYER);
         Order order = orderLoader.load(orderId);
         if (!order.getBuyerId().equals(buyer.getId())) {
@@ -42,9 +45,23 @@ public class RequestReturnService implements RequestReturnUseCase {
         if (order.getStatus() != OrderStatus.DELIVERED) {
             throw new BusinessRuleException("Only a delivered order can be returned");
         }
-        if (returnRepositoryPort.findByOrderId(orderId).isPresent()) {
-            throw new BusinessRuleException("The order " + orderId + " already has a return request");
+        if (productId == null) {
+            throw new BusinessRuleException("The product to return is required");
         }
-        return returnRepositoryPort.save(new Return(EntityId.next(), orderId, reason));
+        OrderItem item = order.getItems().stream()
+                .filter(candidate -> candidate.getProductId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new BusinessRuleException(
+                        "The product " + productId + " is not part of the order " + orderId));
+        boolean alreadyReturned = returnRepositoryPort.findByOrderId(orderId).stream()
+                .filter(existing -> existing.getStatus() != ReturnStatus.REJECTED)
+                .anyMatch(existing -> existing.isForProduct(productId));
+        if (alreadyReturned) {
+            throw new BusinessRuleException("The product " + productId + " of the order " + orderId
+                    + " already has a return request");
+        }
+        Product product = orderLoader.product(item);
+        return returnRepositoryPort.save(new Return(EntityId.next(), orderId, productId, product.getSellerId(),
+                item.getQuantity(), reason));
     }
 }

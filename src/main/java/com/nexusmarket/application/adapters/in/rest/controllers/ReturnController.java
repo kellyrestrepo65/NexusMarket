@@ -45,7 +45,7 @@ public class ReturnController {
     public ReturnResponse request(@RequestHeader(value = CurrentUser.HEADER, required = false) String actor,
                                   @Valid @RequestBody RequestReturnRequest request) {
         return ReturnResponse.from(requestReturnUseCase.execute(CurrentUser.of(actor),
-                EntityId.of(request.orderId()), request.reason()));
+                EntityId.of(request.orderId()), EntityId.of(request.productId()), request.reason()));
     }
 
     @PostMapping("/{returnId}/approval")

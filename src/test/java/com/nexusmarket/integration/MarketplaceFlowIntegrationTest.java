@@ -90,6 +90,13 @@ class MarketplaceFlowIntegrationTest {
 
         // el reporte consolidado lo consulta el supervisor
         call(get("/api/reports/administrative"), supervisor, null, 200);
+
+        // devolucion por producto y reporte del vendedor
+        call(post("/api/returns"), buyer, Map.of("orderId", order, "productId", product, "reason", "Roto"), 201);
+        JsonNode report = call(get("/api/reports/sellers/me"), seller, null, 200);
+        assertEquals(2, report.get("unitsSold").asInt());
+        call(get("/api/reports/sellers"), supervisor, null, 200);
+        call(get("/api/reports/sellers"), seller, null, 403);
     }
 
     @Test
@@ -107,8 +114,7 @@ class MarketplaceFlowIntegrationTest {
         // no se puede comprar mas de lo que hay en inventario
         String product = call(post("/api/products"), seller, Map.of("name", "Mouse", "price", 50,
                 "type", "PHYSICAL"), 201).get("id").asText();
-        call(post("/api/cart/items"), buyer, Map.of("productId", product, "quantity", 1), 201);
-        call(post("/api/orders"), buyer, null, 422);
+        call(post("/api/cart/items"), buyer, Map.of("productId", product, "quantity", 1), 422);
         // validacion de entrada
         call(put("/api/cart/items/" + product), buyer, Map.of("quantity", 0), 400);
     }

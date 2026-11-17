@@ -4,6 +4,7 @@ import com.nexusmarket.domain.services.order.CheckoutService;
 
 import com.nexusmarket.domain.exceptions.BusinessRuleException;
 import com.nexusmarket.domain.exceptions.EntityNotFoundException;
+import com.nexusmarket.domain.models.cart.CartItem;
 import com.nexusmarket.domain.models.cart.ShoppingCart;
 import com.nexusmarket.domain.models.catalog.Product;
 import com.nexusmarket.domain.models.user.Buyer;
@@ -19,8 +20,9 @@ import org.springframework.stereotype.Service;
 /**
  * Agrega un producto al carrito del comprador y crea el carrito la primera vez.
  * Solo compran los compradores con estado comercial habilitado (Dominio 2) y
- * solo se agregan productos publicados (Dominio 5). El inventario se reserva al
- * confirmar la orden (ver CheckoutService), no aqui.
+ * solo se agregan productos publicados (Dominio 5). Si el producto es fisico, la cantidad
+ * total en el carrito no puede superar el stock libre; el inventario se reserva
+ * al confirmar la orden (ver CheckoutService).
  */
 @Service
 public class AddProductToCartService implements AddProductToCartUseCase {
@@ -28,10 +30,13 @@ public class AddProductToCartService implements AddProductToCartUseCase {
     private final AuthorizationService authorizationService;
     private final ProductRepositoryPort productRepositoryPort;
     private final ShoppingCartRepositoryPort shoppingCartRepositoryPort;
+    private final CartStockValidator cartStockValidator;
 
     public AddProductToCartService(AuthorizationService authorizationService,
                                    ProductRepositoryPort productRepositoryPort,
-                                   ShoppingCartRepositoryPort shoppingCartRepositoryPort) {
+                                   ShoppingCartRepositoryPort shoppingCartRepositoryPort,
+                                   CartStockValidator cartStockValidator) {
+        this.cartStockValidator = cartStockValidator;
         this.authorizationService = authorizationService;
         this.productRepositoryPort = productRepositoryPort;
         this.shoppingCartRepositoryPort = shoppingCartRepositoryPort;
@@ -50,6 +55,10 @@ public class AddProductToCartService implements AddProductToCartUseCase {
         }
         ShoppingCart cart = shoppingCartRepositoryPort.findByBuyerId(buyer.getId())
                 .orElseGet(() -> new ShoppingCart(EntityId.next(), buyer.getId()));
+        int alreadyInCart = cart.getItems().stream()
+                .filter(item -> item.getProductId().equals(productId))
+                .mapToInt(CartItem::getQuantity).sum();
+        cartStockValidator.validate(product, alreadyInCart + quantity);
         cart.addProduct(productId, quantity);
         return shoppingCartRepositoryPort.save(cart);
     }

@@ -2,6 +2,8 @@ package com.nexusmarket.domain.services.cart;
 
 import com.nexusmarket.domain.exceptions.EntityNotFoundException;
 import com.nexusmarket.domain.models.cart.ShoppingCart;
+import com.nexusmarket.domain.models.catalog.Product;
+import com.nexusmarket.domain.ports.out.ProductRepositoryPort;
 import com.nexusmarket.domain.models.user.User;
 import com.nexusmarket.domain.valueobjects.EntityId;
 import com.nexusmarket.domain.enums.Role;
@@ -19,9 +21,15 @@ public class ChangeCartItemQuantityService implements ChangeCartItemQuantityUseC
 
     private final AuthorizationService authorizationService;
     private final ShoppingCartRepositoryPort shoppingCartRepositoryPort;
+    private final ProductRepositoryPort productRepositoryPort;
+    private final CartStockValidator cartStockValidator;
 
     public ChangeCartItemQuantityService(AuthorizationService authorizationService,
-                                         ShoppingCartRepositoryPort shoppingCartRepositoryPort) {
+                                         ShoppingCartRepositoryPort shoppingCartRepositoryPort,
+                                         ProductRepositoryPort productRepositoryPort,
+                                         CartStockValidator cartStockValidator) {
+        this.productRepositoryPort = productRepositoryPort;
+        this.cartStockValidator = cartStockValidator;
         this.authorizationService = authorizationService;
         this.shoppingCartRepositoryPort = shoppingCartRepositoryPort;
     }
@@ -31,6 +39,9 @@ public class ChangeCartItemQuantityService implements ChangeCartItemQuantityUseC
         User buyer = authorizationService.requireRole(actorId, Role.BUYER);
         ShoppingCart cart = shoppingCartRepositoryPort.findByBuyerId(buyer.getId())
                 .orElseThrow(() -> new EntityNotFoundException("ShoppingCart for buyer", buyer.getId()));
+        Product product = productRepositoryPort.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException("Product", productId));
+        cartStockValidator.validate(product, newQuantity);
         cart.changeQuantity(productId, newQuantity);
         return shoppingCartRepositoryPort.save(cart);
     }
