@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Registrar vendedor')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="card narrow">
+        <h2>Registrar vendedor</h2>
+        <form th:action="@{/sellers}" method="post" class="form">
+            <label>Documento <input name="identityDocument" required></label>
+            <label>Nombre completo <input name="fullName" required></label>
+            <label>Correo <input name="email" type="email" required></label>
+            <label>Nombre de su primera bodega <input name="firstWarehouseName" required></label>
+            <button type="submit">Registrar</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

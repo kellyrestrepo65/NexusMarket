@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Factura')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <div class="page-head no-print">
+        <a th:href="@{/invoices}" class="back-link">Volver a facturas</a>
+        <button type="button" class="btn print-button" onclick="window.print()">Imprimir / Guardar PDF</button>
+    </div>
+
+    <article class="card invoice">
+        <header class="invoice-head">
+            <div>
+                <div class="brand">nexus<span>market</span></div>
+                <p class="muted small">Marketplace NexusMarket</p>
+            </div>
+            <div class="invoice-number">
+                <span class="muted small">Factura de venta</span>
+                <b th:text="'No. ' + ${invoice.id()}"></b>
+                <span class="small" th:text="${#temporals.format(invoice.issueDate(), 'yyyy-MM-dd HH:mm')}"></span>
+            </div>
+        </header>
+
+        <div class="invoice-parties">
+            <div>
+                <span class="muted small">Cliente</span>
+                <b th:text="${buyer.name()}"></b>
+                <span class="small" th:text="'Documento ' + ${buyer.document()}"></span>
+                <span class="small" th:text="${buyer.email()}"></span>
+                <span class="small" th:text="${buyer.address()}"></span>
+            </div>
+            <div>
+                <span class="muted small">Orden</span>
+                <a th:href="@{/orders/{id}(id=${order.id()})}"><b th:text="${order.id()}"></b></a>
+                <span class="small" th:text="${labels.getOrDefault(order.status(), order.status())}"></span>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <tr><th>Producto</th><th>Cantidad</th><th>Precio unitario</th><th>Subtotal</th></tr>
+                <tr th:each="l : ${order.lines()}">
+                    <td th:text="${l.name()}"></td>
+                    <td th:text="${l.quantity()}"></td>
+                    <td th:text="'$ ' + ${#numbers.formatDecimal(l.unitPrice(), 1, 'POINT', 2, 'COMMA')}"></td>
+                    <td th:text="'$ ' + ${#numbers.formatDecimal(l.subtotal(), 1, 'POINT', 2, 'COMMA')}"></td>
+                </tr>
+            </table>
+        </div>
+        <p class="order-total">Total pagado
+            <b th:text="'$ ' + ${#numbers.formatDecimal(invoice.total(), 1, 'POINT', 2, 'COMMA')}"></b></p>
+    </article>
+</main>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<mxfile host="Electron">
+  <diagram id="nexus-hex" name="Hexagonal NexusMarket">
+    <mxGraphModel dx="2550" dy="1075" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1900" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c11" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=22;" value="NexusMarket - Arquitectura Hexagonal (Puertos y Adaptadores)" vertex="1">
+          <mxGeometry height="40" width="1700" as="geometry" />
+        </mxCell>
+        <mxCell id="c12" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Navegador" vertex="1">
+          <mxGeometry height="60" width="30" x="20" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="c13" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Cliente REST" vertex="1">
+          <mxGeometry height="60" width="30" x="20" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="c14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fontStyle=1;fontSize=14;fillColor=#f5faff;strokeColor=#6c8ebf;" value="ADAPTADORES DE ENTRADA (application/adapters/in)" vertex="1">
+          <mxGeometry height="860" width="520" x="90" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;fontSize=12;" value="Web Thymeleaf&lt;br&gt;adapters/in/web&lt;br&gt;&lt;br&gt;controllers/*WebController&lt;br&gt;handlers/WebControllerAdvice&lt;br&gt;support/WebSession, WebMenu&lt;br&gt;&lt;br&gt;templates/*.html + styles.css" vertex="1">
+          <mxGeometry height="330" width="200" x="110" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="c16" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;fontSize=12;" value="API REST /api&lt;br&gt;adapters/in/rest&lt;br&gt;&lt;br&gt;controllers/*Controller&lt;br&gt;handlers/GlobalExceptionHandler&lt;br&gt;request / response DTO" vertex="1">
+          <mxGeometry height="330" width="200" x="110" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="c17" edge="1" parent="1" source="c12" style="endArrow=block;html=1;strokeColor=#555555;" target="c15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c18" edge="1" parent="1" source="c13" style="endArrow=block;html=1;strokeColor=#555555;" target="c16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c19" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=11;" value="Puertos de entrada - domain/ports/in (30 UseCase)" vertex="1">
+          <mxGeometry height="25" width="250" x="340" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="c20" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" value="&lt;b&gt;Usuarios&lt;/b&gt;&lt;br&gt;RegisterBuyerUseCase&lt;br&gt;RegisterSellerUseCase&lt;br&gt;ConsultUserUseCase&lt;br&gt;ChangeUserStatusUseCase" vertex="1">
+          <mxGeometry height="100" width="250" x="340" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="c21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" value="&lt;b&gt;Catalogo&lt;/b&gt;&lt;br&gt;RegisterProductUseCase&lt;br&gt;ChangeProductStatusUseCase&lt;br&gt;ConsultCatalogUseCase" vertex="1">
+          <mxGeometry height="100" width="250" x="340" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="c22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" value="&lt;b&gt;Carrito&lt;/b&gt;&lt;br&gt;AddProductToCartUseCase&lt;br&gt;ChangeCartItemQuantityUseCase&lt;br&gt;RemoveProductFromCartUseCase&lt;br&gt;ClearCartUseCase&lt;br&gt;ConsultCartUseCase" vertex="1">
+          <mxGeometry height="100" width="250" x="340" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="c23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" value="&lt;b&gt;Ordenes&lt;/b&gt;&lt;br&gt;CheckoutUseCase&lt;br&gt;PayOrderUseCase&lt;br&gt;DispatchOrderUseCase&lt;br&gt;DeliverOrderUseCase&lt;br&gt;ConsultOrdersUseCase" vertex="1">
+          <mxGeometry height="100" width="250" x="340" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="c24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" value="&lt;b&gt;Inventario y bodegas&lt;/b&gt;&lt;br&gt;ReceiveStockUseCase&lt;br&gt;AdjustInventoryUseCase&lt;br&gt;MarkInventoryDamagedUseCase&lt;br&gt;ConsultInventoryUseCase&lt;br&gt;CreateWarehouseUseCase&lt;br&gt;ConsultWarehousesUseCase" vertex="1">
+          <mxGeometry height="100" width="250" x="340" y="565" as="geometry" />
+        </mxCell>
+        <mxCell id="c25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" value="&lt;b&gt;Devoluciones&lt;/b&gt;&lt;br&gt;RequestReturnUseCase&lt;br&gt;ReviewReturnUseCase&lt;br&gt;ProcessRefundUseCase&lt;br&gt;ConsultReturnsUseCase" vertex="1">
+          <mxGeometry height="100" width="250" x="340" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="c26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" value="&lt;b&gt;Facturacion, envios y reporte&lt;/b&gt;&lt;br&gt;ConsultInvoicesUseCase&lt;br&gt;ConsultShipmentsUseCase&lt;br&gt;AdministrativeReportUseCase" vertex="1">
+          <mxGeometry height="100" width="250" x="340" y="795" as="geometry" />
+        </mxCell>
+        <mxCell id="c27" edge="1" parent="1" source="c15" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c28" edge="1" parent="1" source="c16" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c29" edge="1" parent="1" source="c15" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c30" edge="1" parent="1" source="c16" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c31" edge="1" parent="1" source="c15" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c32" edge="1" parent="1" source="c16" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c33" edge="1" parent="1" source="c15" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c34" edge="1" parent="1" source="c16" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c35" edge="1" parent="1" source="c15" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c36" edge="1" parent="1" source="c16" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c37" edge="1" parent="1" source="c15" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c38" edge="1" parent="1" source="c16" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c39" edge="1" parent="1" source="c15" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c40" edge="1" parent="1" source="c16" style="endArrow=block;html=1;strokeColor=#6c8ebf;dashed=1;" target="c26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c41" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;size=0.18;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="&lt;b style=&#39;font-size:16px&#39;&gt;NUCLEO DEL DOMINIO&lt;/b&gt;&lt;br&gt;(com.nexusmarket.domain)&lt;br&gt;&lt;br&gt;&lt;b&gt;services/&lt;/b&gt; implementan los UseCase:&lt;br&gt;user, catalog, cart, order, billing,&lt;br&gt;logistics, inventory, warehouse,&lt;br&gt;returns, report, security&lt;br&gt;&lt;br&gt;&lt;b&gt;models/&lt;/b&gt; user, catalog, cart, order,&lt;br&gt;inventory, report&lt;br&gt;&lt;b&gt;valueobjects/&lt;/b&gt; EntityId, Money, Address...&lt;br&gt;&lt;b&gt;enums/&lt;/b&gt; roles y estados&lt;br&gt;&lt;b&gt;exceptions/&lt;/b&gt; reglas de negocio (RG-xx)" vertex="1">
+          <mxGeometry height="520" width="480" x="650" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="c42" edge="1" parent="1" source="c20" style="endArrow=block;html=1;strokeColor=#d6b656;" target="c41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c43" edge="1" parent="1" source="c21" style="endArrow=block;html=1;strokeColor=#d6b656;" target="c41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c44" edge="1" parent="1" source="c22" style="endArrow=block;html=1;strokeColor=#d6b656;" target="c41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c45" edge="1" parent="1" source="c23" style="endArrow=block;html=1;strokeColor=#d6b656;" target="c41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c46" edge="1" parent="1" source="c24" style="endArrow=block;html=1;strokeColor=#d6b656;" target="c41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c47" edge="1" parent="1" source="c25" style="endArrow=block;html=1;strokeColor=#d6b656;" target="c41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c48" edge="1" parent="1" source="c26" style="endArrow=block;html=1;strokeColor=#d6b656;" target="c41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c49" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;verticalAlign=top;fontStyle=1;fontSize=14;fillColor=#fbf7fc;strokeColor=#9673a6;" value="ADAPTADORES DE SALIDA (application/adapters/out/persistence)" vertex="1">
+          <mxGeometry height="860" width="510" x="1170" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="c50" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;fontSize=11;" value="Puertos de salida - domain/ports/out" vertex="1">
+          <mxGeometry height="25" width="200" x="1185" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="c51" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="UserRepositoryPort" vertex="1">
+          <mxGeometry height="70" width="200" x="1185" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="c52" edge="1" parent="1" source="c41" style="endArrow=block;html=1;strokeColor=#82b366;" target="c51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c53" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="ProductRepositoryPort" vertex="1">
+          <mxGeometry height="70" width="200" x="1185" y="193" as="geometry" />
+        </mxCell>
+        <mxCell id="c54" edge="1" parent="1" source="c41" style="endArrow=block;html=1;strokeColor=#82b366;" target="c53">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c55" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="ShoppingCartRepositoryPort" vertex="1">
+          <mxGeometry height="70" width="200" x="1185" y="281" as="geometry" />
+        </mxCell>
+        <mxCell id="c56" edge="1" parent="1" source="c41" style="endArrow=block;html=1;strokeColor=#82b366;" target="c55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c57" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="OrderRepositoryPort" vertex="1">
+          <mxGeometry height="70" width="200" x="1185" y="369" as="geometry" />
+        </mxCell>
+        <mxCell id="c58" edge="1" parent="1" source="c41" style="endArrow=block;html=1;strokeColor=#82b366;" target="c57">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c59" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="InvoiceRepositoryPort" vertex="1">
+          <mxGeometry height="70" width="200" x="1185" y="457" as="geometry" />
+        </mxCell>
+        <mxCell id="c60" edge="1" parent="1" source="c41" style="endArrow=block;html=1;strokeColor=#82b366;" target="c59">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c61" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="ShipmentRepositoryPort" vertex="1">
+          <mxGeometry height="70" width="200" x="1185" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="c62" edge="1" parent="1" source="c41" style="endArrow=block;html=1;strokeColor=#82b366;" target="c61">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c63" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="ReturnRepositoryPort" vertex="1">
+          <mxGeometry height="70" width="200" x="1185" y="633" as="geometry" />
+        </mxCell>
+        <mxCell id="c64" edge="1" parent="1" source="c41" style="endArrow=block;html=1;strokeColor=#82b366;" target="c63">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c65" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="InventoryRepositoryPort" vertex="1">
+          <mxGeometry height="70" width="200" x="1185" y="721" as="geometry" />
+        </mxCell>
+        <mxCell id="c66" edge="1" parent="1" source="c41" style="endArrow=block;html=1;strokeColor=#82b366;" target="c65">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c67" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="WarehouseRepositoryPort" vertex="1">
+          <mxGeometry height="70" width="200" x="1185" y="809" as="geometry" />
+        </mxCell>
+        <mxCell id="c68" edge="1" parent="1" source="c41" style="endArrow=block;html=1;strokeColor=#82b366;" target="c67">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c69" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;verticalAlign=top;fontSize=11;" value="&lt;b&gt;persistence/mysql&lt;/b&gt; (Spring Data JPA)&lt;br&gt;&lt;br&gt;adapters/&lt;br&gt;UserMysqlAdapter&lt;br&gt;ShoppingCartMysqlAdapter&lt;br&gt;OrderMysqlAdapter&lt;br&gt;InvoiceMysqlAdapter&lt;br&gt;ShipmentMysqlAdapter&lt;br&gt;ReturnMysqlAdapter&lt;br&gt;InventoryMysqlAdapter&lt;br&gt;WarehouseMysqlAdapter&lt;br&gt;&lt;br&gt;entities/ (@Entity)&lt;br&gt;repositories/ (JpaRepository)" vertex="1">
+          <mxGeometry height="430" width="240" x="1420" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="c70" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;verticalAlign=top;fontSize=11;" value="&lt;b&gt;persistence/mongodb&lt;/b&gt; (Spring Data MongoDB)&lt;br&gt;&lt;br&gt;adapters/ProductMongoAdapter&lt;br&gt;documents/ (@Document)&lt;br&gt;repositories/ (MongoRepository)" vertex="1">
+          <mxGeometry height="160" width="240" x="1420" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="c71" edge="1" parent="1" source="c51" style="endArrow=block;html=1;strokeColor=#9673a6;dashed=1;" target="c69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c72" edge="1" parent="1" source="c53" style="endArrow=block;html=1;strokeColor=#9673a6;dashed=1;" target="c70">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c73" edge="1" parent="1" source="c55" style="endArrow=block;html=1;strokeColor=#9673a6;dashed=1;" target="c69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c74" edge="1" parent="1" source="c57" style="endArrow=block;html=1;strokeColor=#9673a6;dashed=1;" target="c69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c75" edge="1" parent="1" source="c59" style="endArrow=block;html=1;strokeColor=#9673a6;dashed=1;" target="c69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c76" edge="1" parent="1" source="c61" style="endArrow=block;html=1;strokeColor=#9673a6;dashed=1;" target="c69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c77" edge="1" parent="1" source="c63" style="endArrow=block;html=1;strokeColor=#9673a6;dashed=1;" target="c69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c78" edge="1" parent="1" source="c65" style="endArrow=block;html=1;strokeColor=#9673a6;dashed=1;" target="c69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c79" edge="1" parent="1" source="c67" style="endArrow=block;html=1;strokeColor=#9673a6;dashed=1;" target="c69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c80" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=12;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;" value="MySQL" vertex="1">
+          <mxGeometry height="110" width="110" x="1730" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="c81" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=12;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;" value="MongoDB" vertex="1">
+          <mxGeometry height="110" width="110" x="1730" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="c82" edge="1" parent="1" source="c69" style="endArrow=block;html=1;strokeColor=#555555;" target="c80">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c83" edge="1" parent="1" source="c70" style="endArrow=block;html=1;strokeColor=#555555;" target="c81">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c84" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#888888;fontSize=11;" value="&lt;b&gt;INFRASTRUCTURE (com.nexusmarket.infrastructure)&lt;/b&gt;&lt;br&gt;config/ - cableado de beans (servicios con sus puertos)&lt;br&gt;security/CurrentUser - actor de la peticion (cabecera X-User-Id en REST, sesion en web)" vertex="1">
+          <mxGeometry height="120" width="480" x="650" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="c85" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;" value="" vertex="1">
+          <mxGeometry height="110" width="1590" x="90" y="950" as="geometry" />
+        </mxCell>
+        <mxCell id="c86" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontStyle=1;align=left;" value="Leyenda" vertex="1">
+          <mxGeometry height="25" width="100" x="100" y="955" as="geometry" />
+        </mxCell>
+        <mxCell id="c87" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;fontSize=12;" value="" vertex="1">
+          <mxGeometry height="30" width="40" x="110" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c88" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" value="Adaptador de entrada" vertex="1">
+          <mxGeometry height="30" width="200" x="155" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c89" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=6;verticalAlign=top;" value="" vertex="1">
+          <mxGeometry height="30" width="40" x="365" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c90" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" value="Puerto de entrada (UseCase)" vertex="1">
+          <mxGeometry height="30" width="200" x="410" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c91" parent="1" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;size=0.18;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" value="" vertex="1">
+          <mxGeometry height="30" width="40" x="620" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c92" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" value="Nucleo del dominio" vertex="1">
+          <mxGeometry height="30" width="200" x="665" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c93" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="" vertex="1">
+          <mxGeometry height="30" width="40" x="875" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c94" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" value="Puerto de salida (RepositoryPort)" vertex="1">
+          <mxGeometry height="30" width="200" x="920" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c95" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;verticalAlign=top;fontSize=11;" value="" vertex="1">
+          <mxGeometry height="30" width="40" x="1130" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c96" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" value="Adaptador de salida" vertex="1">
+          <mxGeometry height="30" width="200" x="1175" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c97" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;size=12;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;" value="" vertex="1">
+          <mxGeometry height="30" width="40" x="1385" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c98" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" value="Base de datos" vertex="1">
+          <mxGeometry height="30" width="200" x="1430" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="c99" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=2;" value="Las dependencias apuntan hacia el nucleo: los adaptadores usan los puertos; el dominio no conoce Spring, Thymeleaf, JPA ni MongoDB. Ambos adaptadores de entrada reutilizan los mismos UseCase." vertex="1">
+          <mxGeometry height="25" width="1500" x="110" y="1028" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

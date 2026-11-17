@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head th:replace="~{fragments/layout :: head('Reporte')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: topbar}"></header>
+<main class="container" th:with="r=${report}">
+    <nav th:replace="~{fragments/layout :: nav}"></nav>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <h2>Reporte administrativo</h2>
+    <div class="grid">
+        <section class="card stat">
+            <h3>Facturacion</h3>
+            <div><span>Facturas emitidas</span><b th:text="${r.invoiceCount()}"></b></div>
+            <div><span>Total facturado</span><b th:text="${#numbers.formatDecimal(r.totalInvoiced(), 1, 'POINT', 2, 'COMMA')}"></b></div>
+            <div><span>Total reembolsado</span><b th:text="${#numbers.formatDecimal(r.totalRefunded(), 1, 'POINT', 2, 'COMMA')}"></b></div>
+        </section>
+        <section class="card stat">
+            <h3>Ordenes por estado</h3>
+            <div th:each="e : ${r.ordersByStatus()}"><span th:text="${labels.getOrDefault(e.key, e.key)}"></span><b th:text="${e.value}"></b></div>
+        </section>
+        <section class="card stat">
+            <h3>Envios por estado</h3>
+            <div th:each="e : ${r.shipmentsByStatus()}"><span th:text="${labels.getOrDefault(e.key, e.key)}"></span><b th:text="${e.value}"></b></div>
+        </section>
+        <section class="card stat">
+            <h3>Devoluciones por estado</h3>
+            <div th:each="e : ${r.returnsByStatus()}"><span th:text="${labels.getOrDefault(e.key, e.key)}"></span><b th:text="${e.value}"></b></div>
+        </section>
+        <section class="card stat">
+            <h3>Unidades disponibles por bodega</h3>
+            <div th:each="e : ${r.availableUnitsByWarehouse()}"><span th:text="${e.key}"></span><b th:text="${e.value}"></b></div>
+        </section>
+    </div>
+</main>
+</body>
+</html>
