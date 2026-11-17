@@ -17,6 +17,7 @@ public class OpenApiConfig {
                 .title("NexusMarket API")
                 .version("1.0.0")
                 .description("Marketplace API. Every operation is executed by the user sent in the X-User-Id header "
+                        + "(user id, or the identity document: buyer ID card or seller NIT) "
                         + "(RG-01); buyer registration is the only public operation."));
     }
 }

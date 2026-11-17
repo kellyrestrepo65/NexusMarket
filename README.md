@@ -109,19 +109,19 @@ Con la aplicacion en ejecucion, abrir http://localhost:8080/ . La interfaz esta 
 
 ## Usuarios iniciales
 
-Para ingresar, abrir `/login` y escribir el documento (cedula o NIT) o el id de usuario. En la API se envia el id de usuario en el encabezado `X-User-Id`.
+Para ingresar, abrir `/login` y escribir el documento (cedula o NIT) o el id de usuario. En la API (y en Swagger) se envia en el encabezado `X-User-Id` el id de usuario o el documento.
 
 Usuarios internos (se crean siempre en el primer arranque):
 
-| Id     | Nombre             | Rol                | Correo                    |
-|--------|--------------------|--------------------|---------------------------|
-| 100000 | Administrador      | Administrador      | admin@nexusmarket.com     |
-| 100001 | Operador Logistico | Operador logistico | logistica@nexusmarket.com |
-| 100002 | Supervisor         | Supervisor         | supervisor@nexusmarket.com |
+| Id     | Nombre             | Rol                | Documento  | Correo                    |
+|--------|--------------------|--------------------|------------|---------------------------|
+| 100000 | Administrador      | Administrador      | 1000000001 | admin@nexusmarket.com     |
+| 100001 | Operador Logistico | Operador logistico | 1000000002 | logistica@nexusmarket.com |
+| 100002 | Supervisor         | Supervisor         | 1000000003 | supervisor@nexusmarket.com |
 
 Datos de prueba (solo con `nexusmarket.demo-data=true` y si no hay vendedores registrados):
 
-| Id     | Nombre      | Rol       | Documento  | Correo         |
+| Id     | Nombre      | Rol       | Cedula / NIT | Correo         |
 |--------|-------------|-----------|------------|----------------|
 | 100003 | TecnoStore  | Vendedor  | 2000000001 | tecno@demo.com |
 | 100005 | SonidoPro   | Vendedor  | 2000000002 | sonido@demo.com |
