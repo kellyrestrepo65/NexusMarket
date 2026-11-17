@@ -83,7 +83,6 @@ Colores: azul = adaptador de entrada, amarillo = puerto de entrada, rojo = domin
 2. Arrancar la aplicacion: `mvn spring-boot:run`.
 3. Web: http://localhost:8080/ · API: http://localhost:8080/api · Swagger: http://localhost:8080/swagger-ui.html
 4. Pruebas: `mvn test` (unitarias + integracion contra MySQL y MongoDB en bases `nexusmarket_test`) y `python scripts/smoke_test.py 100000 100001 100002`.
-5. Guia de sustentacion: [docs/guia-sustentacion.md](docs/guia-sustentacion.md).
 
 ### Todo con Docker (sin Maven ni Java instalados)
 
@@ -104,6 +103,31 @@ Colores: azul = adaptador de entrada, amarillo = puerto de entrada, rojo = domin
 
 Con la aplicacion en ejecucion, abrir http://localhost:8080/ . La interfaz esta hecha con Thymeleaf (Spring MVC): es un segundo adaptador de entrada (application/adapters/in/web) que llama los mismos UseCase que la API REST de /api. Vistas en src/main/resources/templates.
 
-- Ingreso con el id de usuario (queda guardado en la sesion web). Internos: 100000 Administrador, 100001 Operador Logistico, 100002 Supervisor.
+- Ingreso con el id de usuario (queda guardado en la sesion web).
 - Los compradores se autorregistran desde la pantalla de ingreso; los vendedores los registra el Administrador.
 - Las pestanas cambian segun el rol: catalogo, carrito y ordenes (comprador); productos e inventario (vendedor); despacho y entrega (operador logistico); usuarios, bodegas, devoluciones y reporte (administrador); solo consulta (supervisor).
+
+## Usuarios iniciales
+
+Para ingresar, abrir `/login` y escribir el id de usuario. En la API se envia como encabezado `X-User-Id`.
+
+Usuarios internos (se crean siempre en el primer arranque):
+
+| Id     | Nombre             | Rol                | Correo                    |
+|--------|--------------------|--------------------|---------------------------|
+| 100000 | Administrador      | Administrador      | admin@nexusmarket.com     |
+| 100001 | Operador Logistico | Operador logistico | logistica@nexusmarket.com |
+| 100002 | Supervisor         | Supervisor         | supervisor@nexusmarket.com |
+
+Datos de prueba (solo con `nexusmarket.demo-data=true` y si no hay vendedores registrados):
+
+| Id     | Nombre      | Rol       | Documento  | Correo         |
+|--------|-------------|-----------|------------|----------------|
+| 100003 | TecnoStore  | Vendedor  | 2000000001 | tecno@demo.com |
+| 100005 | SonidoPro   | Vendedor  | 2000000002 | sonido@demo.com |
+| 100007 | SoftHouse   | Vendedor  | 2000000003 | soft@demo.com  |
+| 100009 | EduOnline   | Vendedor  | 2000000004 | edu@demo.com   |
+| 100011 | HogarMax    | Vendedor  | 2000000005 | hogar@demo.com |
+| 100044 | Laura Gomez | Comprador | 3000000001 | laura@demo.com |
+
+Los ids salen de una secuencia compartida; para confirmarlos: `GET /api/users` con `X-User-Id: 100000`.
