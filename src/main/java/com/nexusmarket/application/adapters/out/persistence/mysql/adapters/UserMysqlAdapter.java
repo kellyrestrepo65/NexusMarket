@@ -57,6 +57,11 @@ public class UserMysqlAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public Optional<User> findByIdentityDocument(String identityDocument) {
+        return userJpaRepository.findFirstByIdentityDocument(identityDocument).map(this::toDomain);
+    }
+
+    @Override
     public List<User> findAll() {
         return userJpaRepository.findAll().stream().map(this::toDomain).toList();
     }

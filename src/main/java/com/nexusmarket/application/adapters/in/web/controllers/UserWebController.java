@@ -58,7 +58,7 @@ public class UserWebController {
                                  HttpSession session, RedirectAttributes redirect) {
         Seller seller = registerSellerUseCase.execute(WebSession.actor(session), identityDocument, fullName, email,
                 firstWarehouseName);
-        redirect.addFlashAttribute("success", "Vendedor registrado con id " + seller.getId());
+        redirect.addFlashAttribute("success", "Vendedor registrado. Ingresa con su NIT " + seller.getIdentityDocument() + " (id interno " + seller.getId() + ")");
         return "redirect:/users";
     }
 }

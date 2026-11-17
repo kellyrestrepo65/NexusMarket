@@ -103,13 +103,13 @@ Colores: azul = adaptador de entrada, amarillo = puerto de entrada, rojo = domin
 
 Con la aplicacion en ejecucion, abrir http://localhost:8080/ . La interfaz esta hecha con Thymeleaf (Spring MVC): es un segundo adaptador de entrada (application/adapters/in/web) que llama los mismos UseCase que la API REST de /api. Vistas en src/main/resources/templates.
 
-- Ingreso con el id de usuario (queda guardado en la sesion web).
+- Ingreso con el documento: cedula del comprador o NIT del vendedor (tambien sirve el id de usuario). Queda guardado en la sesion web.
 - Los compradores se autorregistran desde la pantalla de ingreso; los vendedores los registra el Administrador.
 - Las pestanas cambian segun el rol: catalogo, carrito y ordenes (comprador); productos e inventario (vendedor); despacho y entrega (operador logistico); usuarios, bodegas, devoluciones y reporte (administrador); solo consulta (supervisor).
 
 ## Usuarios iniciales
 
-Para ingresar, abrir `/login` y escribir el id de usuario. En la API se envia como encabezado `X-User-Id`.
+Para ingresar, abrir `/login` y escribir el documento (cedula o NIT) o el id de usuario. En la API se envia el id de usuario en el encabezado `X-User-Id`.
 
 Usuarios internos (se crean siempre en el primer arranque):
 

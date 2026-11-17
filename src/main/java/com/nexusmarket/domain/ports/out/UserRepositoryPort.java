@@ -19,5 +19,7 @@ public interface UserRepositoryPort {
 
     boolean existsByIdentityDocument(String identityDocument);
 
+    Optional<User> findByIdentityDocument(String identityDocument);
+
     boolean existsByRole(Role role);
 }

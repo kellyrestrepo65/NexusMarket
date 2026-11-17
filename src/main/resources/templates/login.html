@@ -8,9 +8,9 @@
 
     <section class="card" id="loginCard">
         <h2>Ingresar</h2>
-        <p class="muted small">Ingresa con tu id de usuario.</p>
+        <p class="muted small">Ingresa con tu cedula (comprador) o NIT (vendedor).</p>
         <form th:action="@{/login}" method="post" class="form">
-            <label>Id de usuario <input name="userId" required autofocus></label>
+            <label>Cedula / NIT <input name="userId" required autofocus></label>
             <button type="submit">Ingresar</button>
         </form>
         <p class="switch">¿No tienes cuenta? <a href="#" onclick="showRegister(true); return false;">Registrarme como comprador</a></p>
@@ -19,7 +19,7 @@
     <section class="card hidden" id="registerCard">
         <h2>Registrarme como comprador</h2>
         <form th:action="@{/register}" method="post" class="form">
-            <label>Documento <input name="identityDocument" required></label>
+            <label>Cedula <input name="identityDocument" required></label>
             <label>Nombre completo <input name="fullName" required></label>
             <label>Correo <input name="email" type="email" required></label>
             <label>Direccion <input name="addressLine1" required></label>

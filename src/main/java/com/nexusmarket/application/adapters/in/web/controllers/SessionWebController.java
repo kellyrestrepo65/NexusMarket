@@ -70,7 +70,11 @@ public class SessionWebController {
 
     @PostMapping("/login")
     public String login(@RequestParam String userId, HttpSession session) {
-        EntityId actorId = EntityId.of(userId.trim());
+        String value = userId.trim();
+        // se ingresa con el documento (cedula del comprador, NIT del vendedor); el id tambien sirve
+        EntityId actorId = userRepositoryPort.findByIdentityDocument(value)
+                .map(User::getId)
+                .orElseGet(() -> EntityId.of(value));
         // el dominio valida que exista y este activo (RG-01)
         consultUserUseCase.execute(actorId, actorId);
         WebSession.login(session, actorId);
@@ -92,7 +96,7 @@ public class SessionWebController {
         Buyer buyer = registerBuyerUseCase.execute(identityDocument, fullName, email,
                 new Address(addressLine1, city, stateOrProvince, country, postalCode));
         WebSession.login(session, buyer.getId());
-        redirect.addFlashAttribute("success", "Registro exitoso. Tu id de usuario es " + buyer.getId());
+        redirect.addFlashAttribute("success", "Registro exitoso. Ingresa con tu cedula " + buyer.getIdentityDocument() + " (id interno " + buyer.getId() + ")");
         return "redirect:" + WebMenu.homeOf("BUYER");
     }
 
